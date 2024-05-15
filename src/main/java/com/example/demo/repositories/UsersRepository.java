@@ -6,5 +6,6 @@ import com.example.demo.entities.Users;
 
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long> {
-
+    Users findByAccountNumberAndCpf(Long accountNumber, Long cpf);
+    Users findByAccountNumber(Long accountNumber);
 }
