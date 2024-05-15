@@ -40,7 +40,6 @@ public class UserInteractionService {
                     System.out.println("OPÇÃO INVÁLIDA. POR FAVOR, ESCOLHA UMA OPÇÃO VÁLIDA.");
             }
         }
-        sc.close();
     }
 
     private void createAccount(Scanner sc) {
