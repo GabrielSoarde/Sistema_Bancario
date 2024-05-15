@@ -35,7 +35,7 @@ public class UserInteractionService {
                 case 3:
                     System.out.println("OBRIGADO POR USAR NOSSO SISTEMA. ATÉ LOGO!");
                     running = false;
-                    break;
+                    System.exit(0);
                 default:
                     System.out.println("OPÇÃO INVÁLIDA. POR FAVOR, ESCOLHA UMA OPÇÃO VÁLIDA.");
             }
