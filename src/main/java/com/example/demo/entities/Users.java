@@ -19,15 +19,11 @@ public class Users {
     private BigDecimal balance = BigDecimal.ZERO;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Accounts account;
-    public Users() {
-        setAccountNumber();
-    }
-    public Users(String name, String lastName, Long cpf, Integer accountNumber, BigDecimal balance) {
+    public Users(String name, String lastName, Long cpf) {
         this.name = name;
         this.lastName = lastName;
         this.cpf = cpf;
-        this.accountNumber = accountNumber;
-        this.balance = balance;
+        setAccountNumber();
     }
     public BigDecimal getBalance() {
         return balance;
@@ -53,12 +49,19 @@ public class Users {
     public void setCpf(Long cpf) {
         this.cpf = cpf;
     }
-    public void setAccountNumber() {
-        Random random = new Random();
-        this.accountNumber = random.nextInt(900) + 100;
+    public Users(){
     }
     public Integer getAccountNumber(){
         return accountNumber;
+    }
+    public void setAccountNumber() {
+        Random random = new Random();
+        int min = 105;
+        int max = 999;
+        this.accountNumber = random.nextInt(max - min + 1) + min;
+    }
+    public void setAccount(Accounts account){
+        this.account = account;
     }
 
 }
