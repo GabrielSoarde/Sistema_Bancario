@@ -16,14 +16,16 @@ public class UserInteractionService {
     private UsersRepository usersRepository;
     @Autowired
     private AccountsRepository accountsRepository;
+
     public void handleUserInteraction() {
         Scanner sc = new Scanner(System.in);
-        boolean running = true;
 
-        while (running) {
+        while (true) {
             System.out.println("POR FAVOR DIGITE A OPÇÃO DESEJADA");
             System.out.println("1 - CRIAR CONTA\n2 - ACESSAR CONTA\n3 - SAIR");
             int option = sc.nextInt();
+
+            sc.nextLine();
 
             switch (option) {
                 case 1:
@@ -34,7 +36,6 @@ public class UserInteractionService {
                     break;
                 case 3:
                     System.out.println("OBRIGADO POR USAR NOSSO SISTEMA. ATÉ LOGO!");
-                    running = false;
                     System.exit(0);
                 default:
                     System.out.println("OPÇÃO INVÁLIDA. POR FAVOR, ESCOLHA UMA OPÇÃO VÁLIDA.");
@@ -43,12 +44,41 @@ public class UserInteractionService {
     }
 
     private void createAccount(Scanner sc) {
-        System.out.print("DIGITE O SEU NOME: ");
-        String name = sc.next();
-        System.out.print("DIGITE SEU SOBRENOME: ");
-        String lastName = sc.next();
-        System.out.print("DIGITE SEU CPF: ");
-        Long cpf = sc.nextLong();
+        String name = "";
+        String lastName = "";
+        String cpfStr = "";
+
+        while (true) {
+            System.out.print("DIGITE O SEU NOME: ");
+            name = sc.next();
+            if (isValidName(name)) {
+                break;
+            } else {
+                System.out.println("Nome inválido. Por favor, use apenas letras alfabéticas.");
+            }
+        }
+
+        while (true) {
+            System.out.print("DIGITE SEU SOBRENOME: ");
+            lastName = sc.next();
+            if (isValidName(lastName)) {
+                break;
+            } else {
+                System.out.println("Sobrenome inválido. Por favor, use apenas letras alfabéticas.");
+            }
+        }
+
+        while (true) {
+            System.out.print("DIGITE SEU CPF: ");
+            cpfStr = sc.next();
+            if (isValidCpf(cpfStr)) {
+                break;
+            } else {
+                System.out.println("CPF inválido. Por favor, use apenas números.");
+            }
+        }
+
+        Long cpf = Long.parseLong(cpfStr);
 
         Users user = new Users(name, lastName, cpf);
         user.setFullName(name, lastName);
@@ -97,6 +127,7 @@ public class UserInteractionService {
                     System.out.print("DIGITE O VALOR DA TRANSFERÊNCIA: ");
                     BigDecimal transferAmount = sc.nextBigDecimal();
                     transfer(user, sc, transferAmount);
+                    break;
                 case 4:
                     return;
                 case 5:
@@ -133,6 +164,7 @@ public class UserInteractionService {
         System.out.println("DEPÓSITO REALIZADO COM SUCESSO");
         System.out.println("NOVO SALDO: " + user.getBalance());
     }
+
     public void transfer(Users sender, Scanner sc, BigDecimal amount) {
         System.out.print("POR FAVOR DIGITE O NÚMERO DA CONTA DO DESTINATÁRIO: ");
         Long receiverAccountNumber = sc.nextLong();
@@ -143,7 +175,7 @@ public class UserInteractionService {
 
         // Verifica se o destinatário foi encontrado
         if (receiver == null) {
-            System.out.println("DESTINATÁRIO NÃO ENCONTRADO. CERTIFIQUE-SE DE QUE A CONTA E O  CPF ESTÃO CORRETOS.");
+            System.out.println("DESTINATÁRIO NÃO ENCONTRADO. CERTIFIQUE-SE DE QUE A CONTA E O CPF ESTÃO CORRETOS.");
             return;
         }
 
@@ -170,5 +202,13 @@ public class UserInteractionService {
     private boolean realizarLogin(Long numeroConta, Long cpf) {
         Users user = usersRepository.findByAccountNumberAndCpf(numeroConta, cpf);
         return user != null;
+    }
+
+    private boolean isValidName(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
+
+    private boolean isValidCpf(String cpf) {
+        return cpf.matches("\\d+");
     }
 }
